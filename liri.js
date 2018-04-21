@@ -22,20 +22,23 @@
         break;
       case 'spotify-this-song':
         spoti();
-        append(userCmd[2]);
+        append(userCmd[2],songName);
         break;
       case 'movie-this':
         movieFind();
-        append(userCmd[2]);
+        append(userCmd[2],movieName);
         break;
       case 'do-what-it-says':
         doIt();
-        append(userCmd[2]);
+        append(userCmd[2],);
         break;
       case undefined:
         console.log('Hey! Welcome to LIRI, I am here to help so try a phrase like "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says". Bye for now');
         append(userCmd[2]);
         break;
+      default:
+        console.log('Hey! Welcome to LIRI, I am here to help so try a phrase like "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says". Bye for now');
+        append(userCmd[2]);
     }
   }
   liriStrong();
@@ -97,8 +100,8 @@
   function movieFind() {
     if (userCmd.length > 3){
       for (var i = 3; i < userCmd.length; i++) {
-        if (i > 2 && i < userCmd.length) {
-          movieName = movieName + userCmd[i]+ "+" ;
+        if (i >= 4 && i < userCmd.length) {
+          movieName += "+"+ userCmd[i] ;
         } else {
           movieName += userCmd[i];
         }
@@ -108,17 +111,17 @@
     }
 
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=e2f03466";
+    console.log(queryUrl)
     
     request(queryUrl, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-      }
         console.log('You have accessed the OMDB API')
         console.log("===============================================================");
         console.log("Title: " + JSON.parse(body).Title + "\nYear: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value    
          + "\nRotten Toms Rating: " + JSON.parse(body).Ratings[1].Value+ "\nCountry where the Movie Was Produced: " + JSON.parse(body).Country        
          + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
          console.log("===============================================================");
-      
+      }
     });
   }
 //=============================================================================================
@@ -142,8 +145,8 @@
 //=============================================================================================
 
 //append to text file
-  function append(appnd){
-    fs.appendFile("log.txt", appnd + "\n", function(err) {
+  function append(appnd,appnd2){
+    fs.appendFile("log.txt", appnd + " "+ appnd2 + "\n", function(err) {
 
       if (err) {
         console.log(err);
