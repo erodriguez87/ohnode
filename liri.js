@@ -3,45 +3,50 @@
   var keys = require('./keys.js');
   var request = require("request");
   var Twitter = require('twitter');
+  var Spotify = require('node-spotify-api');
   var fs = require("fs");
   
   var userCmd = process.argv;
-  var spotify = keys.spotify;
-  var tweeted = keys.twitter;
+  var movieName = "";
+  var songName ="";  
 
 // ======================================================================================
 
 //logic to respond to user command
   switch (userCmd[2]) {
     case 'my-tweets':
-        recentTweets();
-        break;
+      recentTweets();
+      break;
     case 'spotify-this-song':
-        spoti();
-        break;
+      spoti();
+      break;
     case 'movie-this':
-        movieFind();
-        break;
+      movieFind();
+      break;
     case 'do-what-it-says':
-        doIt();
-        break;
+      doIt();
+      break;
+    case undefined:
+      console.log('Hey! Welcome to LIRI, I am here to help so try a phrase like "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says". Bye for now');
+      break;
   }
 //
 
 //twitter api call and function. this will show your last 20 tweets and when they were created at in your terminal/bash window.
   function recentTweets() {
     var client = new Twitter({
-      consumer_key: tweeted.consumer_key,
-      consumer_secret: tweeted.consumer_secret,
-      access_token_key: tweeted.access_token_key,
-      access_token_secret: tweeted.access_token_secret
+      consumer_key: keys.twitter.consumer_key,
+      consumer_secret: keys.twitter.consumer_secret,
+      access_token_key: keys.twitter.access_token_key,
+      access_token_secret: keys.twitter.access_token_secret
     });
  
     client.get('statuses/user_timeline', function(error, tweets, response) {
       if (!error) {
         console.log(error);
       }
-      console.log('here are your last ' + tweets.length +' tweets')
+      console.log('You have accessed the Twitter Module.')
+      console.log('Here are your last ' + tweets.length +' tweets')
       for (i=0; i<tweets.length;i++) {
         console.log(tweets[i].text + ' created at ' + (tweets[i].created_at));
       }
@@ -50,42 +55,61 @@
 //=============================================================================================
 
 //spotify this song
-function spoti() {
-  var client = new Twitter({
-    consumer_key: tweeted.consumer_key,
-    consumer_secret: tweeted.consumer_secret,
-    access_token_key: tweeted.access_token_key,
-    access_token_secret: tweeted.access_token_secret
-  });
+  function spoti() {
+    for (i=3; i < userCmd.length; i++){
+      songName += " " + userCmd[i]
+    } // loop through user commands and create the string of the song name
+    var spotify = new Spotify({
+      id: keys.spotify2.id,
+      secret: keys.spotify2.secret
+    }); 
 
-  client.get('statuses/user_timeline', function(error, tweets, response) {
-    if (!error) {
-      console.log(error);
+    if (songName === "") {
+      console.log(songName);
+      songName = "the sign ace of base";
+    }else {
+     
     }
-    console.log('here are your last ' + tweets.length +' tweets')
-    for (i=0; i<tweets.length;i++) {
-      console.log(tweets[i].text + ' created at ' + (tweets[i].created_at));
-    }
- });   
-}
+    spotify.search({ type: 'track', query: songName }, function(err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
+      }
+    // console.log(data.tracks.items[0]);
+    console.log('<=========================================================>')
+    console.log('Track Name:' + data.tracks.items[0].name);
+    console.log('Track Artist:' + data.tracks.items[0].artists[0].name);
+    console.log('Track URL:' + data.tracks.items[0].preview_url);
+    console.log('<=========================================================>')
+    });
+  }
 //=============================================================================================
 
 //omdb api call and function
   function movieFind() {
-    // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
-      var request = require("request");
-      console.log('inside movie find')
-
-      // Then run a request to the OMDB API with the movie specified
-      request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=trilogy", function(error, response, body) {
-
-        // If the request is successful (i.e. if the response status code is 200)
-        if (!error && response.statusCode === 200) {
-
-          // Parse the body of the site and recover just the imdbRating
-          // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
-          console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+    if (userCmd.length > 3){
+      for (var i = 3; i < userCmd.length; i++) {
+        if (i > 2 && i < userCmd.length) {
+          movieName = movieName + userCmd[i]+ "+" ;
+        } else {
+          movieName += userCmd[i];
         }
-      });
+      }
+    }else {
+      movieName = 'Mr. Nobody'
+    }
+
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=e2f03466";
+    
+    request(queryUrl, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+      }
+        console.log('You have accessed the OMDB API')
+        console.log("===============================================================");
+        console.log("Title: " + JSON.parse(body).Title + "\nYear: " + JSON.parse(body).Year + "\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value    
+         + "\nRotten Toms Rating: " + JSON.parse(body).Ratings[1].Value+ "\nCountry where the Movie Was Produced: " + JSON.parse(body).Country        
+         + "\nLanguage: " + JSON.parse(body).Language + "\nPlot: " + JSON.parse(body).Plot + "\nActors: " + JSON.parse(body).Actors);
+         console.log("===============================================================");
+      
+    });
   }
 //
