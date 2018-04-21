@@ -9,27 +9,36 @@
   var userCmd = process.argv;
   var movieName = "";
   var songName ="";  
+  var finalUserCmd = "";
 
 // ======================================================================================
 
 //logic to respond to user command
-  switch (userCmd[2]) {
-    case 'my-tweets':
-      recentTweets();
-      break;
-    case 'spotify-this-song':
-      spoti();
-      break;
-    case 'movie-this':
-      movieFind();
-      break;
-    case 'do-what-it-says':
-      doIt();
-      break;
-    case undefined:
-      console.log('Hey! Welcome to LIRI, I am here to help so try a phrase like "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says". Bye for now');
-      break;
+  function liriStrong(){
+    switch (userCmd[2]) {
+      case 'my-tweets':
+        recentTweets();
+        append(userCmd[2]);
+        break;
+      case 'spotify-this-song':
+        spoti();
+        append(userCmd[2]);
+        break;
+      case 'movie-this':
+        movieFind();
+        append(userCmd[2]);
+        break;
+      case 'do-what-it-says':
+        doIt();
+        append(userCmd[2]);
+        break;
+      case undefined:
+        console.log('Hey! Welcome to LIRI, I am here to help so try a phrase like "my-tweets", "spotify-this-song", "movie-this", or "do-what-it-says". Bye for now');
+        append(userCmd[2]);
+        break;
+    }
   }
+  liriStrong();
 //
 
 //twitter api call and function. this will show your last 20 tweets and when they were created at in your terminal/bash window.
@@ -112,4 +121,37 @@
       
     });
   }
-//
+//=============================================================================================
+
+//do what it says
+  function doIt(){
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+      if (error) {
+        return console.log(error);
+      }
+      // Then split it by commas (to make it more readable)
+      var dataArr = data.split(",");
+      userCmd[2] = dataArr[0];
+      songName = dataArr[1];
+      // We will then re-display the content as an array for later use.
+      liriStrong();
+    
+    });
+  }
+//=============================================================================================
+
+//append to text file
+  function append(appnd){
+    fs.appendFile("log.txt", appnd + "\n", function(err) {
+
+      if (err) {
+        console.log(err);
+      }
+      else {
+      }
+
+    });
+  }
+
+//=============================================================================================
