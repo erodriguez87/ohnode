@@ -55,12 +55,12 @@
  
     client.get('statuses/user_timeline', function(error, tweets, response) {
       if (!error) {
-        console.log(error);
+        // console.log(error);
       }
       console.log('You have accessed the Twitter Module.')
       console.log('Here are your last ' + tweets.length +' tweets')
       for (i=0; i<tweets.length;i++) {
-        console.log(tweets[i].text + ' created at ' + (tweets[i].created_at));
+        console.log("\n"+tweets[i].text + ' created at ' + (tweets[i].created_at));
       }
    });   
   }
@@ -111,7 +111,6 @@
     }
 
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=e2f03466";
-    console.log(queryUrl)
     
     request(queryUrl, function(error, response, body) {
       if (!error && response.statusCode === 200) {
