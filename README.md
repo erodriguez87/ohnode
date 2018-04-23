@@ -1,4 +1,6 @@
-# ohnode
+# Title: ohnode
+# Contributor: Eddie Rodriguez
+## GitHub URL:  https://github.com/erodriguez87/ohnode
 
 This is a simple Node application built to respond to different user commands using a variety of APIs.
 
@@ -14,3 +16,5 @@ Available commands:
    * [Node-Spotify-API](https://www.npmjs.com/package/node-spotify-api)
    * [Request](https://www.npmjs.com/package/request)
    * [DotEnv](https://www.npmjs.com/package/dotenv)
+
+![title image](title.PNG)
