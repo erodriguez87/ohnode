@@ -1,6 +1,7 @@
 # Title: ohnode
 # Contributor: Eddie Rodriguez
 ## GitHub URL:  https://github.com/erodriguez87/ohnode
+## Video Example URL: https://youtu.be/DzmB5C_Gxxs
 
 This is a simple Node application built to respond to different user commands using a variety of APIs.
 
